@@ -1,18 +1,20 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Path;
 
 public class Run {
 
     public static void main(String[] args) throws InterruptedException {
+
+        // setting application global variable containing location of file with passwords
+        Utils.setOriginalPasswordsLocation(Path.of(args[0]));
+        Utils.setEncryptedPasswordsLocation(Path.of(args[1]));
 
         System.out.print("Welcome to the text encryptor. ");
 
         while(true) {
 
             System.out.println("Choose the option: \n");
-            System.out.println("1. Encrypt the file");
-            System.out.println("2. Decrypt the file");
+            System.out.println("1. Encrypt passwords");
+            System.out.println("2. Watch passwords");
             System.out.println("3. Quit Text Encryptor");
 
             String optionToExecute = Utils.readFromConsole();

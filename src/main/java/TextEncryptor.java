@@ -9,6 +9,7 @@ public class TextEncryptor {
 
     private char[] key;
     private static TextEncryptor instance;
+    Path passwordsLocation;
 
     public static TextEncryptor getInstance() {
         if(instance == null) {
@@ -22,10 +23,8 @@ public class TextEncryptor {
     // a method to prepare text, send the file to encryption and save encrypted text
     public void encrypt() {
 
-        System.out.print("Enter file path: ");
-
         // checking if the file exists
-        Path filePath = Paths.get(Utils.readFromConsole());
+        Path filePath = Utils.getOriginalPasswordsLocation();
         if(filePath.toFile().exists()) {
             System.out.println("File found.");
         } else {
@@ -33,8 +32,9 @@ public class TextEncryptor {
             return;
         }
 
-        System.out.println("Enter the path where encrypted file will be placed: ");
-        Path encodeTo = Paths.get(Utils.readFromConsole());
+        // setting path where encrypted passwords will be placed
+        Path encodeTo = Utils.getEncryptedPasswordsLocation();
+        passwordsLocation = encodeTo;
 
         // entering the key
         System.out.println("Enter the encryption key.");
@@ -201,5 +201,13 @@ public class TextEncryptor {
 
     public void setKey(String key) {
         this.key = key.toCharArray();
+    }
+
+    public Path getPasswordsLocation() {
+        return passwordsLocation;
+    }
+
+    public void setPasswordsLocation(Path passwordsLocation) {
+        this.passwordsLocation = passwordsLocation;
     }
 }

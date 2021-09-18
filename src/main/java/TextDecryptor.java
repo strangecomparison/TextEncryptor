@@ -1,11 +1,8 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 public class TextDecryptor {
 
@@ -22,25 +19,18 @@ public class TextDecryptor {
     private TextDecryptor() {}
 
     public void decrypt() {
-        System.out.print("Enter the path to file you want to decrypt: ");
-
         // check if the file exists
-        Path filePath = Paths.get(Utils.readFromConsole());
-        if(filePath.toFile().exists()) {
-            System.out.println("File found.");
-        } else {
-            System.out.println("File not found. Check if the file path is correct.");
+        Path filePath = Utils.getEncryptedPasswordsLocation();
+        if(!filePath.toFile().exists()) {
+            System.out.println("File with encrypted passwords missing. Check its location.");
             return;
         }
-
-        System.out.println("Enter the path where decrypted file will be placed: ");
-        Path decryptTo = Paths.get(Utils.readFromConsole());
 
         // entering the encryption key
         System.out.println("Enter the encryption key.");
         this.key = Utils.readFromConsole().toCharArray();
         System.out.println("Key accepted.");
-        System.out.println("Decryption procedure started, please wait...");
+        System.out.println("Decryption procedure started, please wait...\n");
 
         /* reading file contents and transforming into UTF-8 in case if it has
         other encoding */
@@ -48,31 +38,15 @@ public class TextDecryptor {
         try {
             stringFileContent = Files.readString(filePath, StandardCharsets.UTF_8);
         } catch(IOException e) {
-            e.printStackTrace();
+            System.out.println("Something went wrong. Check if encrypted file is still present.");
         }
 
         // sending the content for decryption and receiving the decrypted content
         String decryptedContent = decryptingProcedure(stringFileContent);
         System.out.println("Decryption finished. \n");
 
-        // writing decrypted content to a file
-        try {
-            if(Files.exists(decryptTo)) {
-                Files.writeString(decryptTo,
-                        decryptedContent,
-                        StandardCharsets.UTF_8,
-                        StandardOpenOption.TRUNCATE_EXISTING,
-                        StandardOpenOption.WRITE);
-            } else {
-                Files.writeString(decryptTo,
-                        decryptedContent,
-                        StandardCharsets.UTF_8,
-                        StandardOpenOption.CREATE_NEW,
-                        StandardOpenOption.WRITE);
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
+        // writing decrypted content to  command line
+        System.out.println(decryptedContent);
     }
 
     // a method that manages the entire decryption procedure
